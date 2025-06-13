@@ -8,7 +8,10 @@ import pedidoProdutoRoutes from './routes/pedidoProdutoRoutes.js';
 
 const app = fastify();
 
-app.register(cors, { origin: '*' });
+app.register(cors, {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+});
 
 app.register(produtoRoutes, { prefix: '/produtos' });
 app.register(funcionarioRoutes, { prefix: '/funcionarios' });

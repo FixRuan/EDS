@@ -4,7 +4,7 @@ import logoImage from '../assets/logo.png'
 import { Input } from '../components/form/Input'
 import { Lock, User } from "phosphor-react";
 
-export function Login(){
+export default function Login(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("")
 
