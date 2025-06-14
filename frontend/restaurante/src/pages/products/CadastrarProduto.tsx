@@ -8,6 +8,7 @@ const CadastrarProduto: React.FC = () => {
     preco: '',
     categoria: 'lanche',
     disponivel: true,
+    quantidadeEstoque: '',
   });
 
   const [mensagem, setMensagem] = useState('');
@@ -32,6 +33,7 @@ const CadastrarProduto: React.FC = () => {
       await axios.post('http://localhost:3000/produtos', {
         ...form,
         preco: parseFloat(form.preco),
+        quantidadeEstoque: parseInt(form.quantidadeEstoque),
       });
       setMensagem('Produto cadastrado com sucesso!');
       setForm({
@@ -40,6 +42,7 @@ const CadastrarProduto: React.FC = () => {
         preco: '',
         categoria: 'lanche',
         disponivel: true,
+        quantidadeEstoque: '',
       });
     } catch (error) {
       console.error(error);
@@ -90,6 +93,19 @@ const CadastrarProduto: React.FC = () => {
               value={form.preco}
               onChange={handleChange}
               required
+              className="w-full p-2 rounded bg-gray-900 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1">Quantidade em Estoque:</label>
+            <input
+              type="number"
+              name="quantidadeEstoque"
+              value={form.quantidadeEstoque}
+              onChange={handleChange}
+              required
+              min="0"
               className="w-full p-2 rounded bg-gray-900 text-white"
             />
           </div>

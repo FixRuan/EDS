@@ -1,9 +1,9 @@
-// Importa as funções do controlador de associação Pedido_Produto
 import {
   associarProdutoAPedido,
   desassociarProdutoDoPedido,
   obterProdutosDoPedido,
-  obterPedidosDoProduto
+  obterPedidosDoProduto,
+  atualizarQuantidadeProdutoDoPedido
 } from '../controllers/pedidoProdutoController.js';
 
 export default async function pedidoProdutoRoutes(fastify, opts) {
@@ -11,4 +11,5 @@ export default async function pedidoProdutoRoutes(fastify, opts) {
   fastify.delete('/:idPedido/:idProduto', desassociarProdutoDoPedido);
   fastify.get('/pedidos/:idPedido/produtos', obterProdutosDoPedido);
   fastify.get('/produtos/:idProduto/pedidos', obterPedidosDoProduto);
+  fastify.put('/:idPedido/:idProduto', atualizarQuantidadeProdutoDoPedido);
 }

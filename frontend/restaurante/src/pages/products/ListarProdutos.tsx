@@ -8,6 +8,7 @@ interface Produto {
   preco: number;
   categoria: 'lanche' | 'porcao' | 'bebida';
   disponivel: number | boolean;
+  quantidadeEstoque: number;
 }
 
 const ListarProdutos: React.FC = () => {
@@ -45,6 +46,7 @@ const ListarProdutos: React.FC = () => {
       await axios.put(`http://localhost:3000/produtos/${id}`, {
         ...form,
         preco: parseFloat(form.preco as any),
+        quantidadeEstoque: parseInt(form.quantidadeEstoque as any),
       });
       setEditandoId(null);
       buscarProdutos();
@@ -76,128 +78,139 @@ const ListarProdutos: React.FC = () => {
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-gray-800 rounded-md overflow-hidden">
-            <thead>
-              <tr className="bg-yellow-500 text-[#18191A] text-left">
-                <th className="py-3 px-4">ID</th>
-                <th className="py-3 px-4">Nome</th>
-                <th className="py-3 px-4">Descrição</th>
-                <th className="py-3 px-4">Preço</th>
-                <th className="py-3 px-4">Categoria</th>
-                <th className="py-3 px-4">Disponível</th>
-                <th className="py-3 px-4">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {produtos.map((produto) => (
-                <tr key={produto.idProduto} className="border-b border-gray-700 hover:bg-gray-700">
-                  <td className="py-3 px-4">{produto.idProduto}</td>
+           <thead>
+  <tr className="bg-yellow-500 text-[#18191A] text-left">
+    <th className="py-3 px-4">ID</th>
+    <th className="py-3 px-4 min-w-[180px] whitespace-nowrap">Nome</th>
+    <th className="py-3 px-4 min-w-[200px]">Descrição</th>
+    <th className="py-3 px-4 min-w-[120px] whitespace-nowrap">Preço</th>
+    <th className="py-3 px-4">Estoque</th>
+    <th className="py-3 px-4">Categoria</th>
+    <th className="py-3 px-4">Disponível</th>
+    <th className="py-3 px-4">Ações</th>
+  </tr>
+</thead>
+<tbody>
+  {produtos.map((produto) => (
+    <tr key={produto.idProduto} className="border-b border-gray-700 hover:bg-gray-700">
+      <td className="py-3 px-4">{produto.idProduto}</td>
 
-                  {editandoId === produto.idProduto ? (
-                    <>
-                      <td className="py-3 px-4 min-w-[150px] whitespace-nowrap">
-                        <input
-                          type="text"
-                          name="nome"
-                          value={form.nome ?? ''}
-                          onChange={handleChange}
-                          className="bg-gray-900 p-1 rounded w-full text-white"
-                        />
-                      </td>
-                      <td className="py-3 px-4">
-                        <input
-                          type="text"
-                          name="descricao"
-                          value={form.descricao ?? ''}
-                          onChange={handleChange}
-                          className="bg-gray-900 p-1 rounded w-full text-white"
-                        />
-                      </td>
-                      <td className="py-3 px-4 min-w-[100px] whitespace-nowrap">
-                        <input
-                          type="number"
-                          name="preco"
-                          value={form.preco ?? ''}
-                          onChange={handleChange}
-                          className="bg-gray-900 p-1 rounded w-full text-white"
-                        />
-                      </td>
-                      <td className="py-3 px-4">
-                        <select
-                          name="categoria"
-                          value={form.categoria ?? 'lanche'}
-                          onChange={handleChange}
-                          className="bg-gray-900 p-1 rounded w-full text-white"
-                        >
-                          <option value="lanche">Lanche</option>
-                          <option value="porcao">Porção</option>
-                          <option value="bebida">Bebida</option>
-                        </select>
-                      </td>
-                      <td className="py-3 px-4">
-                        <input
-                          type="checkbox"
-                          name="disponivel"
-                          checked={!!form.disponivel}
-                          onChange={handleChange}
-                        />
-                      </td>
-                      <td className="py-3 px-4 space-x-2 flex">
-                        <button
-                          onClick={() => salvarEdicao(produto.idProduto)}
-                          className="bg-green-500 text-white px-2 py-1 rounded"
-                        >
-                          Salvar
-                        </button>
-                        <button
-                          onClick={() => setEditandoId(null)}
-                          className="bg-gray-500 text-white px-2 py-1 rounded"
-                        >
-                          Cancelar
-                        </button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td className="py-3 px-4 min-w-[150px] whitespace-nowrap">
-                        {produto.nome}
-                      </td>
-                      <td className="py-3 px-4">{produto.descricao}</td>
-                      <td className="py-3 px-4 min-w-[100px] whitespace-nowrap">
-                        R$ {produto.preco.toFixed(2)}
-                      </td>
-                      <td className="py-3 px-4 capitalize">{produto.categoria}</td>
-                      <td className="py-3 px-4">
-                        {produto.disponivel ? 'Sim' : 'Não'}
-                      </td>
-                      <td className="py-3 px-4 space-x-2 flex">
-                        <button
-                          onClick={() => {
-                            setEditandoId(produto.idProduto);
-                            setForm(produto);
-                          }}
-                          className="bg-yellow-500 text-black px-2 py-1 rounded"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => excluirProduto(produto.idProduto)}
-                          className="bg-red-600 text-white px-2 py-1 rounded"
-                        >
-                          Excluir
-                        </button>
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))}
-              {produtos.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="text-center py-6 text-gray-400">
-                    Nenhum produto encontrado.
-                  </td>
-                </tr>
-              )}
-            </tbody>
+      {editandoId === produto.idProduto ? (
+        <>
+          <td className="py-3 px-4 min-w-[180px] whitespace-nowrap">
+            <input
+              type="text"
+              name="nome"
+              value={form.nome ?? ''}
+              onChange={handleChange}
+              className="bg-gray-900 p-1 rounded w-full text-white"
+            />
+          </td>
+          <td className="py-3 px-4 min-w-[200px]">
+            <input
+              type="text"
+              name="descricao"
+              value={form.descricao ?? ''}
+              onChange={handleChange}
+              className="bg-gray-900 p-1 rounded w-full text-white"
+            />
+          </td>
+          <td className="py-3 px-4 min-w-[120px] whitespace-nowrap">
+            <input
+              type="number"
+              name="preco"
+              step="0.01"
+              value={form.preco ?? ''}
+              onChange={handleChange}
+              className="bg-gray-900 p-1 rounded w-full text-white"
+            />
+          </td>
+          <td className="py-3 px-4">
+            <input
+              type="number"
+              name="quantidadeEstoque"
+              value={form.quantidadeEstoque ?? ''}
+              onChange={handleChange}
+              className="bg-gray-900 p-1 rounded w-full text-white"
+              min={0}
+            />
+          </td>
+          <td className="py-3 px-4">
+            <select
+              name="categoria"
+              value={form.categoria ?? 'lanche'}
+              onChange={handleChange}
+              className="bg-gray-900 p-1 rounded w-full text-white"
+            >
+              <option value="lanche">Lanche</option>
+              <option value="porcao">Porção</option>
+              <option value="bebida">Bebida</option>
+            </select>
+          </td>
+          <td className="py-3 px-4">
+            <input
+              type="checkbox"
+              name="disponivel"
+              checked={!!form.disponivel}
+              onChange={handleChange}
+            />
+          </td>
+          <td className="py-3 px-4 space-x-2 flex">
+            <button
+              onClick={() => salvarEdicao(produto.idProduto)}
+              className="bg-green-500 text-white px-2 py-1 rounded"
+            >
+              Salvar
+            </button>
+            <button
+              onClick={() => setEditandoId(null)}
+              className="bg-gray-500 text-white px-2 py-1 rounded"
+            >
+              Cancelar
+            </button>
+          </td>
+        </>
+      ) : (
+        <>
+          <td className="py-3 px-4 min-w-[180px] whitespace-nowrap">
+            {produto.nome}
+          </td>
+          <td className="py-3 px-4 min-w-[200px]">{produto.descricao}</td>
+          <td className="py-3 px-4 min-w-[120px] whitespace-nowrap">
+            R$ {produto.preco.toFixed(2)}
+          </td>
+          <td className="py-3 px-4">{produto.quantidadeEstoque}</td>
+          <td className="py-3 px-4 capitalize">{produto.categoria}</td>
+          <td className="py-3 px-4">{produto.disponivel ? 'Sim' : 'Não'}</td>
+          <td className="py-3 px-4 space-x-2 flex">
+            <button
+              onClick={() => {
+                setEditandoId(produto.idProduto);
+                setForm(produto);
+              }}
+              className="bg-yellow-500 text-black px-2 py-1 rounded"
+            >
+              Editar
+            </button>
+            <button
+              onClick={() => excluirProduto(produto.idProduto)}
+              className="bg-red-600 text-white px-2 py-1 rounded"
+            >
+              Excluir
+            </button>
+          </td>
+        </>
+      )}
+    </tr>
+  ))}
+  {produtos.length === 0 && (
+    <tr>
+      <td colSpan={8} className="text-center py-6 text-gray-400">
+        Nenhum produto encontrado.
+      </td>
+    </tr>
+  )}
+</tbody>
           </table>
         </div>
       </div>

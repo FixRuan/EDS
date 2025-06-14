@@ -23,6 +23,13 @@ export async function atualizarProduto(req, reply) {
   reply.send(atualizado);
 }
 
+export async function atualizarEstoque(req, reply) {
+  const { id } = req.params;
+  const { quantidadeEstoque } = req.body;
+  await produtoService.updateEstoque(id, quantidadeEstoque);
+  reply.send({ message: 'Estoque atualizado', id, quantidadeEstoque });
+}
+
 export async function excluirProduto(req, reply) {
   const { id } = req.params;
   await produtoService.deleteProduto(id);
