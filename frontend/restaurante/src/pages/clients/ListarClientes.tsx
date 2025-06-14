@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '../../services/api';
 
 interface Cliente {
   idCliente: number;
@@ -17,7 +17,7 @@ const ListarClientes: React.FC = () => {
   // Buscar lista
   const fetchClientes = async () => {
     try {
-      const { data } = await axios.get<Cliente[]>('http://localhost:3000/clientes');
+      const { data } = await api.get<Cliente[]>('/clientes');
       setClientes(data);
     } catch (err) {
       setErro('Erro ao buscar clientes.');
@@ -50,7 +50,7 @@ const ListarClientes: React.FC = () => {
   // Salvar edição
   const saveEdit = async (id: number) => {
     try {
-      await axios.put(`http://localhost:3000/clientes/${id}`, editData);
+      await api.put(`/clientes/${id}`, editData);
       // Atualiza a lista localmente
       setClientes((old) =>
         old.map((c) =>
@@ -68,7 +68,7 @@ const ListarClientes: React.FC = () => {
   const handleExcluir = async (id: number) => {
     if (!window.confirm('Tem certeza que deseja excluir este cliente?')) return;
     try {
-      await axios.delete(`http://localhost:3000/clientes/${id}`);
+      await api.delete(`/clientes/${id}`);
       setClientes((old) => old.filter((c) => c.idCliente !== id));
     } catch (err) {
       setErro('Erro ao excluir cliente.');
@@ -140,7 +140,7 @@ const ListarClientes: React.FC = () => {
                       <td className="py-3 px-4 border-b border-gray-700">{cliente.nome}</td>
                       <td className="py-3 px-4 border-b border-gray-700">{cliente.telefone}</td>
                       <td className="py-3 px-4 border-b border-gray-700">{cliente.endereco}</td>
-                      <td className="py-3 px-4 border-b border-gray-700 space-x-2">
+                      <td className="py-3 px-4 border-b border-gray-700 space-x-2 flex">
                         <button
                           onClick={() => startEdit(cliente)}
                           className="bg-yellow-500 text-black px-3 py-1 rounded hover:brightness-90 transition"

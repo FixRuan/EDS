@@ -1,14 +1,46 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react'
 import homeImage from '../assets/loginImage.png'
 import logoImage from '../assets/logo.png'
 import { Input } from '../components/form/Input'
 import { Lock, User } from "phosphor-react";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login(){
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
+  const [login, setLogin] = useState("");
+  const [senha, setSenha] = useState("");
+  const navigate = useNavigate();
 
-  function handleLogin(){}
+    async function handleLogin(event: any) {
+      event.preventDefault();
+
+      try {
+        const response = await axios.post('http://localhost:3000/login', {
+          login,
+          senha
+        });
+
+        const { token, funcionario } = response.data;
+
+        // Armazena o token e a função do funcionário
+        localStorage.setItem('token', token);
+        localStorage.setItem('funcao', funcionario.funcao);
+
+      if (funcionario.funcao === 'administrador') {
+        navigate('/dashboard');
+      } else if (funcionario.funcao === 'caixa') {
+        navigate('/caixa/dashboard');
+      } else if (funcionario.funcao === 'garcom') {
+        navigate('/garcom/dashboard');
+      } else {
+        alert('Função não reconhecida.');
+      }
+      } catch (error) {
+        console.error('Erro no login:', error);
+        alert('Login ou senha inválidos.');
+      }
+    }
 
   return (
     <>
@@ -31,20 +63,19 @@ export default function Login(){
             className="flex flex-col items-center mt-24 gap-5"
           >
             <Input
-              placeholder="Email"
+              placeholder="Login"
               name="email"
-              type="email"
               icon={<User size={19} className="text-[#FBFEFB]" weight="fill" />}
-              value={email}
-              onChange={(evt) => setEmail(evt.target.value)}
+              value={login}
+              onChange={(evt) => setLogin(evt.target.value)}
             />
             <Input
-              placeholder="Password"
+              placeholder="Senha"
               name="password"
               type="password"
               icon={<Lock size={19} className="text-[#FBFEFB]" weight="fill" />}
-              value={password}
-              onChange={(evt) => setPassword(evt.target.value)}
+              value={senha}
+              onChange={(evt) => setSenha(evt.target.value)}
             />
 
             <button

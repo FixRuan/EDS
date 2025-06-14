@@ -5,6 +5,7 @@ import funcionarioRoutes from './routes/funcionarioRoutes.js';
 import clienteRoutes from './routes/clienteRoutes.js';
 import pedidoRoutes from './routes/pedidoRoutes.js';
 import pedidoProdutoRoutes from './routes/pedidoProdutoRoutes.js';
+import loginRoutes from './routes/loginRoutes.js';
 
 const app = fastify();
 
@@ -18,5 +19,6 @@ app.register(funcionarioRoutes, { prefix: '/funcionarios' });
 app.register(clienteRoutes, { prefix: '/clientes' });
 app.register(pedidoRoutes, { prefix: '/pedidos' });
 app.register(pedidoProdutoRoutes, { prefix: '/pedido-produto' });
+app.register(loginRoutes);
 
 app.listen({port: process.env.PORT || 3000})

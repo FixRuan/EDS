@@ -1,39 +1,24 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Browsers, ClipboardText, Hamburger, UserPlus, Users, SignOut } from 'phosphor-react';
+import { ClipboardText, Hamburger, SignOut } from 'phosphor-react';
 
 import Logo from '../assets/logo.png';
 
-const Sidebar: React.FC = () => {
+const SidebarCaixa: React.FC = () => {
   const navigate = useNavigate();
 
   const navSections = [
     {
-      title: 'Funcionários',
-      items: [
-        { name: 'Cadastrar Funcionários', path: '/funcionarios/cadastrar', icon: <UserPlus size={20} /> },
-        { name: 'Listar Funcionários', path: '/funcionarios/listar', icon: <Users size={20} /> },
-      ],
-    },
-    {
-      title: 'Clientes',
-      items: [
-        { name: 'Cadastrar Cliente', path: '/clientes/cadastrar', icon: <UserPlus size={20} /> },
-        { name: 'Listar Clientes', path: '/clientes/listar', icon: <Users size={20} /> },
-      ],
-    },
-    {
       title: 'Produtos',
       items: [
-        { name: 'Cadastrar Produto', path: '/produtos/cadastrar', icon: <Hamburger size={20} /> },
-        { name: 'Listar Produtos', path: '/produtos/listar', icon: <Hamburger size={20} /> },
+        { name: 'Cadastrar Produto', path: '/caixa/produtos/cadastrar', icon: <Hamburger size={20} /> },
+        { name: 'Listar Produtos', path: '/caixa/produtos/listar', icon: <Hamburger size={20} /> },
       ],
     },
     {
       title: 'Pedidos',
       items: [
-        { name: 'Cadastrar Pedido', path: '/pedidos/cadastrar', icon: <ClipboardText size={20} /> },
-        { name: 'Listar Pedidos', path: '/pedidos/listar', icon: <ClipboardText size={20} /> },
+        { name: 'Listar Pedidos', path: '/caixa/pedidos/listar', icon: <ClipboardText size={20} /> },
       ],
     },
   ];
@@ -53,7 +38,7 @@ const Sidebar: React.FC = () => {
       <nav className="flex-1 px-4 py-6 space-y-6 overflow-auto">
         <div>
           <NavLink
-            to="/dashboard"
+            to="/caixa/dashboard"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-md text-base font-medium transition duration-200 ${
                 isActive
@@ -62,7 +47,7 @@ const Sidebar: React.FC = () => {
               }`
             }
           >
-            <Browsers size={20} />
+            <ClipboardText size={20} />
             Dashboard
           </NavLink>
         </div>
@@ -109,4 +94,4 @@ const Sidebar: React.FC = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarCaixa;

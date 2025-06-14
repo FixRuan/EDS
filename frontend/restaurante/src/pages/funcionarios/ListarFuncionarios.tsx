@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import {api} from '../../services/api'; // cliente com token incluído
 
 interface Funcionario {
   idFuncionario: number;
@@ -19,15 +19,18 @@ const ListarFuncionarios: React.FC = () => {
     buscarFuncionarios();
   }, []);
 
-  const buscarFuncionarios = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/funcionarios');
-      setFuncionarios(response.data);
-    } catch (error) {
-      setErro('Erro ao buscar funcionários.');
-      console.error(error);
-    }
-  };
+ const buscarFuncionarios = async () => {
+  try {
+    const response = await api.get('/funcionarios');
+    const apenasNaoAdmins = response.data.filter(
+      (f: Funcionario) => f.funcao.toLowerCase() !== 'administrador'
+    );
+    setFuncionarios(apenasNaoAdmins);
+  } catch (error) {
+    setErro('Erro ao buscar funcionários.');
+    console.error(error);
+  }
+};
 
   const handleEditar = (funcionario: Funcionario) => {
     setEditandoId(funcionario.idFuncionario);
@@ -45,7 +48,7 @@ const ListarFuncionarios: React.FC = () => {
 
   const handleSalvar = async (id: number) => {
     try {
-      await axios.put(`http://localhost:3000/funcionarios/${id}`, editForm);
+      await api.put(`/funcionarios/${id}`, editForm);
       setEditandoId(null);
       setEditForm({});
       buscarFuncionarios();
@@ -57,7 +60,7 @@ const ListarFuncionarios: React.FC = () => {
 
   const handleExcluir = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:3000/funcionarios/${id}`);
+      await api.delete(`/funcionarios/${id}`);
       buscarFuncionarios();
     } catch (error) {
       setErro('Erro ao excluir funcionário.');

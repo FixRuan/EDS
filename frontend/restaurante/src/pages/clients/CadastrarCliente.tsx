@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { api } from '../../services/api';
 
 const CadastrarCliente: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ const CadastrarCliente: React.FC = () => {
     setErro('');
 
     try {
-      const response = await axios.post('http://localhost:3000/clientes', formData);
+      const response = await api.post('/clientes', formData);
 
       setMensagem('Cliente cadastrado com sucesso!');
       setFormData({

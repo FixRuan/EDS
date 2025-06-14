@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
-import axios from 'axios';
+import {api} from '../../services/api';
 
 const CadastrarFuncionario: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -24,8 +26,7 @@ const CadastrarFuncionario: React.FC = () => {
     setErro('');
 
     try {
-      const response = await axios.post('http://localhost:3000/funcionarios', formData);
-
+      const response = await api.post('/funcionarios', formData); // agora usando o cliente com token
       setMensagem('Funcionário cadastrado com sucesso!');
       setFormData({
         nome: '',
