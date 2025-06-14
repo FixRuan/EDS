@@ -3,18 +3,22 @@ import {
   obterFuncionario,
   criarFuncionario,
   atualizarFuncionario,
-  excluirFuncionario
+  excluirFuncionario,
+  listarFuncionariosParaSelecao
 } from '../controllers/funcionarioController.js';
 
-import { autenticarJWT, apenasAdmin } from '../middlewares/auth.js';
+import { autenticarJWT, apenasAdmin, verificarPermissao } from '../middlewares/auth.js';
 
 export default async function funcionarioRoutes(fastify, opts) {
   fastify.addHook('onRequest', autenticarJWT);
-  fastify.addHook('onRequest', apenasAdmin);
 
-  fastify.get('/', listarFuncionarios);
-  fastify.get('/:id', obterFuncionario);
-  fastify.post('/', criarFuncionario);
-  fastify.put('/:id', atualizarFuncionario);
-  fastify.delete('/:id', excluirFuncionario);
+  fastify.get('/selecionar', {
+    preHandler: verificarPermissao('administrador', 'garcom', 'caixa')
+  }, listarFuncionariosParaSelecao);
+
+  fastify.get('/', { preHandler: apenasAdmin }, listarFuncionarios);
+  fastify.get('/:id', { preHandler: apenasAdmin }, obterFuncionario);
+  fastify.post('/', { preHandler: apenasAdmin }, criarFuncionario);
+  fastify.put('/:id', { preHandler: apenasAdmin }, atualizarFuncionario);
+  fastify.delete('/:id', { preHandler: apenasAdmin }, excluirFuncionario);
 }

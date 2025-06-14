@@ -10,6 +10,16 @@ export async function listarClientes(req, reply) {
   }
 }
 
+export async function listarClientesParaSelecao(req, reply) {
+  try {
+    const clientes = await clienteService.getClientesParaSelecao();
+    reply.send(clientes);
+  } catch (error) {
+    console.error('Erro ao listar clientes para seleção:', error);
+    reply.code(500).send({ message: 'Erro ao buscar clientes.' });
+  }
+}
+
 export async function obterCliente(req, reply) {
   try {
     const { id } = req.params;

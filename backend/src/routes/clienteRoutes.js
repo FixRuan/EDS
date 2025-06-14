@@ -1,19 +1,23 @@
+import { autenticarJWT, apenasAdmin, verificarPermissao } from '../middlewares/auth.js';
 import {
   listarClientes,
   obterCliente,
   criarCliente,
   atualizarCliente,
-  excluirCliente
+  excluirCliente,
+  listarClientesParaSelecao
 } from '../controllers/clienteController.js';
-import { autenticarJWT, apenasAdmin } from '../middlewares/auth.js';
 
 export default async function clienteRoutes(fastify, opts) {
   fastify.addHook('onRequest', autenticarJWT);
-  fastify.addHook('onRequest', apenasAdmin);
 
-  fastify.get('/', listarClientes);
-  fastify.get('/:id', obterCliente);
-  fastify.post('/', criarCliente);
-  fastify.put('/:id', atualizarCliente);
-  fastify.delete('/:id', excluirCliente);
+  fastify.get('/selecionar', {
+    preHandler: verificarPermissao('administrador', 'garcom', 'caixa')
+  }, listarClientesParaSelecao);
+
+  fastify.get('/', { preHandler: apenasAdmin }, listarClientes);
+  fastify.get('/:id', { preHandler: apenasAdmin }, obterCliente);
+  fastify.post('/', { preHandler: apenasAdmin }, criarCliente);
+  fastify.put('/:id', { preHandler: apenasAdmin }, atualizarCliente);
+  fastify.delete('/:id', { preHandler: apenasAdmin }, excluirCliente);
 }

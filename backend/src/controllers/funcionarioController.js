@@ -10,6 +10,16 @@ export async function listarFuncionarios(req, reply) {
   }
 }
 
+export async function listarFuncionariosParaSelecao(req, reply) {
+  try {
+    const funcionarios = await funcionarioService.getFuncionariosParaSelecao();
+    reply.send(funcionarios);
+  } catch (error) {
+    console.error('Erro ao listar funcionários para seleção:', error);
+    reply.code(500).send({ message: 'Erro ao buscar funcionários.' });
+  }
+}
+
 export async function obterFuncionario(req, reply) {
   try {
     const { id } = req.params;

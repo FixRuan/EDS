@@ -4,7 +4,7 @@ import * as clienteService from '../services/clienteService.js';
 import * as funcionarioService from '../services/funcionarioService.js';
 
 const FORMA_PAGAMENTO_ENUM = ['dinheiro', 'pix', 'cartao'];
-const STATUS_ENUM = ['preparando', 'pronto', 'entregue', 'cancelado'];
+const STATUS_ENUM = ['preparando', 'pronto', 'entregue', 'cancelado', 'finalizado'];
 
 export async function listarPedidos(req, reply) {
   try {

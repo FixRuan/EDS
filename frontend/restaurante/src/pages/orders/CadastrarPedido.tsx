@@ -1,51 +1,74 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "../../services/api";
 import Select from "react-select";
 
 function CadastrarPedido() {
   const [clientes, setClientes] = useState<any[]>([]);
-  const [funcionarios, setFuncionarios] = useState<any[]>([]);
   const [produtos, setProdutos] = useState<any[]>([]);
   const [produtosSelecionados, setProdutosSelecionados] = useState<
     { idProduto: number; quantidade: number }[]
   >([]);
+
   const [pedido, setPedido] = useState({
-    idCliente: "",
-    idFuncionario: "",
+    idCliente: null as number | null,
+    idFuncionario: null as number | null,
     formaPagamento: "dinheiro",
     observacoes: "",
-    status: "preparando"
+    status: "preparando",
   });
 
   useEffect(() => {
     async function fetchData() {
-      const [resClientes, resFuncionarios, resProdutos] = await Promise.all([
-        axios.get("http://localhost:3000/clientes"),
-        axios.get("http://localhost:3000/funcionarios"),
-        axios.get("http://localhost:3000/produtos")
-      ]);
-      setClientes(resClientes.data);
-      setFuncionarios(resFuncionarios.data);
-      setProdutos(resProdutos.data.filter((p: { disponivel: boolean }) => p.disponivel));
+      try {
+        const funcionarioLogado = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+        if (!funcionarioLogado?.idFuncionario) {
+          alert("Funcionário não autenticado.");
+          return;
+        }
+
+        console.log("Funcionário logado:", funcionarioLogado);
+
+        setPedido((prev) => ({ ...prev, idFuncionario: funcionarioLogado.idFuncionario }));
+
+        const [resClientes, resProdutos] = await Promise.all([
+          api.get("/clientes/selecionar"),
+          api.get("/produtos"),
+        ]);
+
+        console.log("Clientes recebidos:", resClientes.data);
+        console.log("Produtos recebidos:", resProdutos.data);
+
+        setClientes(resClientes.data);
+        setProdutos(resProdutos.data.filter((p: { disponivel: boolean }) => p.disponivel));
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+        alert("Erro ao carregar dados para o formulário.");
+      }
     }
+
     fetchData();
   }, []);
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleInputChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
     const { name, value } = e.target;
-    setPedido(prev => ({ ...prev, [name]: value }));
+    setPedido((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSelectChange(option: any, field: "idCliente" | "idFuncionario") {
-    setPedido(prev => ({ ...prev, [field]: option ? option.value : "" }));
+  function handleSelectChange(option: any) {
+    const idClienteSelecionado = option ? Number(option.value) : null;
+    console.log("Cliente selecionado:", idClienteSelecionado);
+    setPedido((prev) => ({ ...prev, idCliente: idClienteSelecionado }));
   }
 
   function toggleProduto(idProduto: number) {
-    setProdutosSelecionados(prev => {
-      const existente = prev.find(p => p.idProduto === idProduto);
+    setProdutosSelecionados((prev) => {
+      const existente = prev.find((p) => p.idProduto === idProduto);
       if (existente) {
-        return prev.filter(p => p.idProduto !== idProduto);
+        return prev.filter((p) => p.idProduto !== idProduto);
       } else {
         return [...prev, { idProduto, quantidade: 1 }];
       }
@@ -53,29 +76,38 @@ function CadastrarPedido() {
   }
 
   function alterarQuantidade(idProduto: number, novaQtd: number) {
-    setProdutosSelecionados(prev =>
-      prev.map(p =>
-        p.idProduto === idProduto ? { ...p, quantidade: novaQtd } : p
-      )
+    setProdutosSelecionados((prev) =>
+      prev.map((p) => (p.idProduto === idProduto ? { ...p, quantidade: novaQtd } : p))
     );
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const resPedido = await axios.post("http://localhost:3000/pedidos", pedido);
+      console.log("Enviando pedido:", pedido);
+      console.log("Produtos selecionados:", produtosSelecionados);
+
+      const resPedido = await api.post("/pedidos", pedido);
       const { idPedido } = resPedido.data;
 
-      await Promise.all(produtosSelecionados.map(prod =>
-        axios.post("http://localhost:3000/pedido-produto", {
-          idPedido,
-          idProduto: prod.idProduto,
-          quantidade: prod.quantidade
-        })
-      ));
+      await Promise.all(
+        produtosSelecionados.map((prod) =>
+          api.post("/pedido-produto", {
+            idPedido,
+            idProduto: prod.idProduto,
+            quantidade: prod.quantidade,
+          })
+        )
+      );
 
       alert("Pedido criado com sucesso!");
-      setPedido({ idCliente: "", idFuncionario: "", formaPagamento: "dinheiro", observacoes: "", status: "preparando" });
+      setPedido({
+        idCliente: null,
+        idFuncionario: pedido.idFuncionario,
+        formaPagamento: "dinheiro",
+        observacoes: "",
+        status: "preparando",
+      });
       setProdutosSelecionados([]);
     } catch (error) {
       console.error("Erro ao cadastrar pedido:", error);
@@ -86,46 +118,57 @@ function CadastrarPedido() {
   const customSelectStyles = {
     control: (provided: any) => ({
       ...provided,
-      backgroundColor: '#1f1f1f',
-      borderColor: '#3f3f46',
-      color: '#fff',
-      padding: '2px',
-      boxShadow: 'none',
-      '&:hover': {
-        borderColor: '#facc15'
-      }
+      backgroundColor: "#1f1f1f",
+      borderColor: "#3f3f46",
+      color: "#fff",
+      padding: "2px",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#facc15",
+      },
     }),
     menu: (provided: any) => ({
       ...provided,
-      backgroundColor: '#1f1f1f',
-      color: '#fff'
+      backgroundColor: "#1f1f1f",
+      color: "#fff",
     }),
     option: (provided: any, state: any) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#2c2c2c' : '#1f1f1f',
-      color: '#fff',
-      cursor: 'pointer'
+      backgroundColor: state.isFocused ? "#2c2c2c" : "#1f1f1f",
+      color: "#fff",
+      cursor: "pointer",
     }),
     singleValue: (provided: any) => ({
       ...provided,
-      color: '#fff'
+      color: "#fff",
     }),
     input: (provided: any) => ({
       ...provided,
-      color: '#fff'
+      color: "#fff",
     }),
     placeholder: (provided: any) => ({
       ...provided,
-      color: '#a1a1aa'
+      color: "#a1a1aa",
     }),
     dropdownIndicator: (provided: any) => ({
       ...provided,
-      color: '#facc15'
+      color: "#facc15",
     }),
     indicatorSeparator: () => ({
-      display: 'none'
-    })
+      display: "none",
+    }),
   };
+
+  const clienteOptions = clientes.map((c) => ({
+    value: c.id, // Corrigido de idCliente para id
+    label: c.nome,
+  }));
+
+  const clienteSelecionado =
+    clienteOptions.find((opt) => opt.value === pedido.idCliente) || null;
+
+  console.log("Cliente options:", clienteOptions);
+  console.log("Cliente selecionado state:", pedido.idCliente);
 
   return (
     <div className="w-full h-full bg-[#18191A]">
@@ -136,22 +179,10 @@ function CadastrarPedido() {
           <div>
             <label className="block text-sm font-medium mb-1">Cliente</label>
             <Select
-              options={clientes.map(c => ({ value: c.idCliente, label: c.nome }))}
-              value={clientes.map(c => ({ value: c.idCliente, label: c.nome })).find(opt => opt.value === pedido.idCliente) || null}
-              onChange={option => handleSelectChange(option, "idCliente")}
+              options={clienteOptions}
+              value={clienteSelecionado}
+              onChange={handleSelectChange}
               placeholder="Selecione um cliente"
-              isClearable
-              styles={customSelectStyles}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Funcionário</label>
-            <Select
-              options={funcionarios.map(f => ({ value: f.idFuncionario, label: f.nome }))}
-              value={funcionarios.map(f => ({ value: f.idFuncionario, label: f.nome })).find(opt => opt.value === pedido.idFuncionario) || null}
-              onChange={option => handleSelectChange(option, "idFuncionario")}
-              placeholder="Selecione um funcionário"
               isClearable
               styles={customSelectStyles}
             />
@@ -199,8 +230,8 @@ function CadastrarPedido() {
           <div>
             <h2 className="text-lg font-semibold text-yellow-400 mb-2">Produtos</h2>
             <div className="grid grid-cols-1 gap-3">
-              {produtos.map(prod => {
-                const selecionado = produtosSelecionados.find(p => p.idProduto === prod.idProduto);
+              {produtos.map((prod) => {
+                const selecionado = produtosSelecionados.find((p) => p.idProduto === prod.idProduto);
                 return (
                   <div key={prod.idProduto} className="flex items-center gap-3">
                     <input
@@ -217,7 +248,7 @@ function CadastrarPedido() {
                         type="number"
                         min={1}
                         value={selecionado.quantidade}
-                        onChange={e => alterarQuantidade(prod.idProduto, Number(e.target.value))}
+                        onChange={(e) => alterarQuantidade(prod.idProduto, Number(e.target.value))}
                         className="w-20 bg-[#1f1f1f] border border-gray-600 rounded p-1 text-white"
                       />
                     )}

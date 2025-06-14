@@ -6,6 +6,11 @@ export async function getAllFuncionarios() {
   return rows;
 }
 
+export async function getFuncionariosParaSelecao() {
+  const [rows] = await db.query('SELECT idFuncionario AS id, nome FROM Funcionario');
+  return rows;
+}
+
 export async function getFuncionarioById(id) {
   const [rows] = await db.query('SELECT * FROM Funcionario WHERE idFuncionario = ?', [id]);
   return rows[0];

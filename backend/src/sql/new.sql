@@ -34,7 +34,7 @@ CREATE TABLE Pedido (
     dataHora DATETIME,
     formaPagamento ENUM('dinheiro', 'pix', 'cartao'),
     observacoes TEXT,
-    status ENUM('preparando', 'pronto', 'entregue', 'cancelado'),
+    status ENUM('preparando', 'pronto', 'entregue', 'cancelado', 'finalizado'),
     FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
     FOREIGN KEY (idFuncionario) REFERENCES Funcionario(idFuncionario)
 );

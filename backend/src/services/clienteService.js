@@ -5,6 +5,11 @@ export async function getAllClientes() {
   return rows;
 }
 
+export async function getClientesParaSelecao() {
+  const [rows] = await db.query('SELECT idCliente AS id, nome FROM Cliente');
+  return rows;
+}
+
 export async function getClienteById(id) {
   const [rows] = await db.query('SELECT * FROM Cliente WHERE idCliente = ?', [id]);
   return rows[0];

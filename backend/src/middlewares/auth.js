@@ -20,6 +20,16 @@ export function autenticarJWT(req, reply, done) {
   }
 }
 
+export function verificarPermissao(...funcoesPermitidas) {
+  return (req, reply, done) => {
+    const { funcao } = req.user;
+    if (!funcoesPermitidas.includes(funcao)) {
+      return reply.code(403).send({ message: 'Acesso negado' });
+    }
+    done();
+  };
+}
+
 export function apenasAdmin(req, reply, done) {
   if (req.user.funcao !== 'administrador') {
     return reply.code(403).send({ message: 'Acesso negado. Apenas administradores podem acessar.' });
