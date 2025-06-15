@@ -1,6 +1,6 @@
-import { FaturamentoCard } from "../components/Faturamento.tsx";
-import { ItensMaisVendidosList } from "../components/MaisVendidos.tsx";
-import { useDashboardData } from "../components/DashboardData.tsx";
+import { FaturamentoCard } from "../components/Faturamento";
+import { ItensMaisVendidosList } from "../components/MaisVendidos";
+import { useDashboardData } from "../components/DashboardData";
 
 function Dashboard() {
   const { faturamento, itensMaisVendidos, loading, error } = useDashboardData();
