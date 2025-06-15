@@ -3,7 +3,7 @@ import {
   obterMaisVendidos
 } from '../controllers/adminController.js';
 
-import { autenticarJWT, apenasAdmin, verificarPermissao } from '../middlewares/auth.js';
+import { autenticarJWT, apenasAdmin } from '../middlewares/auth.js';
 
 export default async function funcionarioRoutes(fastify, opts) {
   fastify.addHook('onRequest', autenticarJWT);

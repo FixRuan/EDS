@@ -1,8 +1,11 @@
 import db from '../models/db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-const JWT_SECRET = 'adminToken';
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function autenticarFuncionario(login, senha) {
   const [rows] = await db.query('SELECT * FROM Funcionario WHERE login = ?', [login]);
