@@ -6,6 +6,7 @@ import clienteRoutes from './routes/clienteRoutes.js';
 import pedidoRoutes from './routes/pedidoRoutes.js';
 import pedidoProdutoRoutes from './routes/pedidoProdutoRoutes.js';
 import loginRoutes from './routes/loginRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = fastify();
 
@@ -19,6 +20,7 @@ app.register(funcionarioRoutes, { prefix: '/funcionarios' });
 app.register(clienteRoutes, { prefix: '/clientes' });
 app.register(pedidoRoutes, { prefix: '/pedidos' });
 app.register(pedidoProdutoRoutes, { prefix: '/pedido-produto' });
+app.register(adminRoutes, { prefix: '/admin' });
 app.register(loginRoutes);
 
 app.listen({port: process.env.PORT || 3000})
