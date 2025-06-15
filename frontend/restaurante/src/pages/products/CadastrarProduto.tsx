@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CadastrarProduto: React.FC = () => {
+export default function CadastrarProduto(){
   const [form, setForm] = useState({
     nome: '',
     descricao: '',
@@ -14,17 +15,15 @@ const CadastrarProduto: React.FC = () => {
   const [mensagem, setMensagem] = useState('');
   const [erro, setErro] = useState('');
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type, checked } = e.target;
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>){
+    const { name, value, type, checked } = e.target as any;
     setForm((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent){
     e.preventDefault();
     setErro('');
     setMensagem('');
@@ -35,7 +34,9 @@ const CadastrarProduto: React.FC = () => {
         preco: parseFloat(form.preco),
         quantidadeEstoque: parseInt(form.quantidadeEstoque),
       });
+
       setMensagem('Produto cadastrado com sucesso!');
+
       setForm({
         nome: '',
         descricao: '',
@@ -147,5 +148,3 @@ const CadastrarProduto: React.FC = () => {
     </div>
   );
 };
-
-export default CadastrarProduto;

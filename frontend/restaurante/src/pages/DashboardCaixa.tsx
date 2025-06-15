@@ -1,4 +1,4 @@
-const DashboardCaixa = () => {
+export default function DashboardCaixa(){
   return (
     <div className="p-6 text-white">
       <h1 className="text-2xl font-bold mb-4">Bem-vindo, Caixa!</h1>
@@ -6,5 +6,3 @@ const DashboardCaixa = () => {
     </div>
   );
 };
-
-export default DashboardCaixa;

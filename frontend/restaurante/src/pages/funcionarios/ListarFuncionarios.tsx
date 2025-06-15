@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {api} from '../../services/api'; // cliente com token incluído
+import {api} from '../../services/api';
 
 interface Funcionario {
   idFuncionario: number;
@@ -9,7 +9,7 @@ interface Funcionario {
   login: string;
 }
 
-const ListarFuncionarios: React.FC = () => {
+export default function ListarFuncionarios(){
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [erro, setErro] = useState('');
   const [editandoId, setEditandoId] = useState<number | null>(null);
@@ -19,7 +19,7 @@ const ListarFuncionarios: React.FC = () => {
     buscarFuncionarios();
   }, []);
 
- const buscarFuncionarios = async () => {
+ async function buscarFuncionarios(){
   try {
     const response = await api.get('/funcionarios');
     const apenasNaoAdmins = response.data.filter(
@@ -32,21 +32,21 @@ const ListarFuncionarios: React.FC = () => {
   }
 };
 
-  const handleEditar = (funcionario: Funcionario) => {
+  function handleEditar(funcionario: Funcionario){
     setEditandoId(funcionario.idFuncionario);
     setEditForm({ ...funcionario });
   };
 
-  const handleCancelar = () => {
+  function handleCancelar(){
     setEditandoId(null);
     setEditForm({});
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>){
     setEditForm({ ...editForm, [e.target.name]: e.target.value });
   };
 
-  const handleSalvar = async (id: number) => {
+  async function handleSalvar(id: number){
     try {
       await api.put(`/funcionarios/${id}`, editForm);
       setEditandoId(null);
@@ -58,7 +58,7 @@ const ListarFuncionarios: React.FC = () => {
     }
   };
 
-  const handleExcluir = async (id: number) => {
+  async function handleExcluir(id: number){
     try {
       await api.delete(`/funcionarios/${id}`);
       buscarFuncionarios();
@@ -180,5 +180,3 @@ const ListarFuncionarios: React.FC = () => {
     </div>
   );
 };
-
-export default ListarFuncionarios;

@@ -1,10 +1,9 @@
-import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Browsers, ClipboardText, Hamburger, UserPlus, Users, SignOut } from 'phosphor-react';
 
 import Logo from '../assets/logo.png';
 
-const Sidebar: React.FC = () => {
+export default function Sidebar(){
   const navigate = useNavigate();
 
   const navSections = [
@@ -108,5 +107,3 @@ const Sidebar: React.FC = () => {
     </aside>
   );
 };
-
-export default Sidebar;

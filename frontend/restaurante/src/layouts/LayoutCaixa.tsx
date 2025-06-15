@@ -1,8 +1,7 @@
-import React from 'react';
 import SidebarCaixa from '../components/SidebarCaixa';
 import { Outlet } from 'react-router-dom';
 
-const LayoutCaixa: React.FC = () => {
+export default function LayoutCaixa(){
   return (
     <div className="flex">
       <SidebarCaixa />
@@ -12,5 +11,3 @@ const LayoutCaixa: React.FC = () => {
     </div>
   );
 };
-
-export default LayoutCaixa;

@@ -1,10 +1,9 @@
-import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ClipboardText, SignOut } from 'phosphor-react';
 
 import Logo from '../assets/logo.png';
 
-const SidebarGarcom: React.FC = () => {
+export default function SidebarGarcom(){
   const navigate = useNavigate();
 
   const navItems = [
@@ -77,5 +76,3 @@ const SidebarGarcom: React.FC = () => {
     </aside>
   );
 };
-
-export default SidebarGarcom;

@@ -12,34 +12,34 @@ export default function Login(){
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
 
-        async function handleLogin(event: any) {
-          event.preventDefault();
+  async function handleLogin(event: any) {
+     event.preventDefault();
 
-          try {
-            const response = await axios.post('http://localhost:3000/login', {
-              login,
-              senha
-            });
+     try {
+        const response = await axios.post('http://localhost:3000/login', {
+          login,
+          senha
+        });
 
-            const { token, funcionario } = response.data;
+        const { token, funcionario } = response.data;
 
-            localStorage.setItem('token', token);
-            localStorage.setItem('usuario', JSON.stringify(funcionario)); // Armazena todo o objeto
+        localStorage.setItem('token', token);
+        localStorage.setItem('usuario', JSON.stringify(funcionario));
 
-            if (funcionario.funcao === 'administrador') {
-              navigate('/dashboard');
-            } else if (funcionario.funcao === 'caixa') {
-              navigate('/caixa/dashboard');
-            } else if (funcionario.funcao === 'garcom') {
-              navigate('/garcom/dashboard');
-            } else {
-              alert('Função não reconhecida.');
-            }
-          } catch (error) {
-            console.error('Erro no login:', error);
-            alert('Login ou senha inválidos.');
-          }
+        if (funcionario.funcao === 'administrador') {
+            navigate('/dashboard');
+        } else if (funcionario.funcao === 'caixa') {
+            navigate('/caixa/dashboard');
+        } else if (funcionario.funcao === 'garcom') {
+            navigate('/garcom/dashboard');
+        } else {
+            alert('Função não reconhecida.');
         }
+    } catch (error) {
+        console.error('Erro no login:', error);
+        alert('Login ou senha inválidos.');
+    }
+  }
 
   return (
     <>

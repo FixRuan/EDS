@@ -8,14 +8,14 @@ interface Cliente {
   endereco: string;
 }
 
-const ListarClientes: React.FC = () => {
+export default function ListarClientes(){
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [erro, setErro] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editData, setEditData] = useState<Partial<Cliente>>({});
 
   // Buscar lista
-  const fetchClientes = async () => {
+  async function fetchClientes(){
     try {
       const { data } = await api.get<Cliente[]>('/clientes');
       setClientes(data);
@@ -30,25 +30,25 @@ const ListarClientes: React.FC = () => {
   }, []);
 
   // Iniciar edição
-  const startEdit = (cliente: Cliente) => {
+  function startEdit(cliente: Cliente){
     setEditingId(cliente.idCliente);
     setEditData({ nome: cliente.nome, telefone: cliente.telefone, endereco: cliente.endereco });
     setErro('');
   };
 
   // Cancelar edição
-  const cancelEdit = () => {
+  function cancelEdit(){
     setEditingId(null);
     setEditData({});
   };
 
   // Capturar mudança nos inputs de edição
-  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleEditChange(e: React.ChangeEvent<HTMLInputElement>){
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
   // Salvar edição
-  const saveEdit = async (id: number) => {
+  async function saveEdit(id: number){
     try {
       await api.put(`/clientes/${id}`, editData);
       // Atualiza a lista localmente
@@ -64,8 +64,7 @@ const ListarClientes: React.FC = () => {
     }
   };
 
-  // Excluir cliente
-  const handleExcluir = async (id: number) => {
+  async function handleExcluir(id: number){
     if (!window.confirm('Tem certeza que deseja excluir este cliente?')) return;
     try {
       await api.delete(`/clientes/${id}`);
@@ -172,5 +171,3 @@ const ListarClientes: React.FC = () => {
     </div>
   );
 };
-
-export default ListarClientes;

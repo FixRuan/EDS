@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { api } from '../../services/api';
 
-const CadastrarCliente: React.FC = () => {
+export default function CadastrarCliente(){
   const [formData, setFormData] = useState({
     nome: '',
     telefone: '',
@@ -22,7 +23,7 @@ const CadastrarCliente: React.FC = () => {
     setErro('');
 
     try {
-      const response = await api.post('/clientes', formData);
+      await api.post('/clientes', formData);
 
       setMensagem('Cliente cadastrado com sucesso!');
       setFormData({
@@ -75,5 +76,3 @@ const CadastrarCliente: React.FC = () => {
     </div>
   );
 };
-
-export default CadastrarCliente;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import Select from "react-select";
 
-function CadastrarPedido() {
+export default function CadastrarPedido() {
   const [clientes, setClientes] = useState<any[]>([]);
   const [produtos, setProdutos] = useState<any[]>([]);
   const [produtosSelecionados, setProdutosSelecionados] = useState<
@@ -28,17 +28,12 @@ function CadastrarPedido() {
           return;
         }
 
-        console.log("Funcionário logado:", funcionarioLogado);
-
         setPedido((prev) => ({ ...prev, idFuncionario: funcionarioLogado.idFuncionario }));
 
         const [resClientes, resProdutos] = await Promise.all([
           api.get("/clientes/selecionar"),
           api.get("/produtos"),
         ]);
-
-        console.log("Clientes recebidos:", resClientes.data);
-        console.log("Produtos recebidos:", resProdutos.data);
 
         setClientes(resClientes.data);
         setProdutos(resProdutos.data.filter((p: { disponivel: boolean }) => p.disponivel));
@@ -51,16 +46,13 @@ function CadastrarPedido() {
     fetchData();
   }, []);
 
-  function handleInputChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) {
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setPedido((prev) => ({ ...prev, [name]: value }));
   }
 
   function handleSelectChange(option: any) {
     const idClienteSelecionado = option ? Number(option.value) : null;
-    console.log("Cliente selecionado:", idClienteSelecionado);
     setPedido((prev) => ({ ...prev, idCliente: idClienteSelecionado }));
   }
 
@@ -84,9 +76,6 @@ function CadastrarPedido() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      console.log("Enviando pedido:", pedido);
-      console.log("Produtos selecionados:", produtosSelecionados);
-
       const resPedido = await api.post("/pedidos", pedido);
       const { idPedido } = resPedido.data;
 
@@ -164,11 +153,7 @@ function CadastrarPedido() {
     label: c.nome,
   }));
 
-  const clienteSelecionado =
-    clienteOptions.find((opt) => opt.value === pedido.idCliente) || null;
-
-  console.log("Cliente options:", clienteOptions);
-  console.log("Cliente selecionado state:", pedido.idCliente);
+  const clienteSelecionado = clienteOptions.find((opt) => opt.value === pedido.idCliente) || null;
 
   return (
     <div className="w-full h-full bg-[#18191A]">
@@ -269,5 +254,3 @@ function CadastrarPedido() {
     </div>
   );
 }
-
-export default CadastrarPedido;

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 
-function ListarPedidos() {
+export default function ListarPedidos() {
   const [pedidos, setPedidos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editandoPedidoId, setEditandoPedidoId] = useState<number | null>(null);
@@ -54,9 +54,8 @@ function ListarPedidos() {
 
               return {
                 ...pedido,
-                cliente: clientesMap.get(pedido.idCliente) || `ID: ${pedido.idCliente}`,
-                funcionario:
-                  funcionariosMap.get(pedido.idFuncionario) || `ID: ${pedido.idFuncionario}`,
+                cliente: clientesMap.get(pedido.idCliente),
+                funcionario: funcionariosMap.get(pedido.idFuncionario),
                 produtos: produtosDetalhados.filter(Boolean),
               };
             } catch {
@@ -91,7 +90,7 @@ function ListarPedidos() {
     fetchProdutosDisponiveis();
   }, []);
 
-  const handleEditar = (pedido: any) => {
+  function handleEditar(pedido: any){
     setEditandoPedidoId(pedido.idPedido);
     setFormEdicao({
       status: pedido.status,
@@ -106,7 +105,7 @@ function ListarPedidos() {
     });
   };
 
-  const handleSalvar = async (idPedido: number) => {
+  async function handleSalvar(idPedido: number){
     try {
       const pedidoOriginal = pedidos.find((p) => p.idPedido === idPedido);
       if (!pedidoOriginal) return;
@@ -147,16 +146,8 @@ function ListarPedidos() {
         }
       }
 
-      setPedidos((prev) =>
-        prev.map((p) =>
-          p.idPedido === idPedido
-            ? {
-                ...p,
-                ...formEdicao,
-              }
-            : p
-        )
-      );
+      setPedidos((prev) => prev.map((p) => p.idPedido === idPedido ?
+              { ...p, ...formEdicao,} : p ));
 
       setEditandoPedidoId(null);
     } catch (error) {
@@ -164,7 +155,7 @@ function ListarPedidos() {
     }
   };
 
-  const toggleProduto = (produto: any) => {
+  function toggleProduto(produto: any){
     setFormEdicao((prev) => {
       const existente = prev.produtos.find((p) => p.idProduto === produto.idProduto);
       if (existente) {
@@ -181,7 +172,7 @@ function ListarPedidos() {
     });
   };
 
-  const alterarQuantidade = (idProduto: number, quantidade: number) => {
+  function alterarQuantidade(idProduto: number, quantidade: number){
     setFormEdicao((prev) => ({
       ...prev,
       produtos: prev.produtos.map((p) =>
@@ -355,5 +346,3 @@ function ListarPedidos() {
     </div>
   );
 }
-
-export default ListarPedidos;

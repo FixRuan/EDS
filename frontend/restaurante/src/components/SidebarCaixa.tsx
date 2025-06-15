@@ -1,10 +1,9 @@
-import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ClipboardText, Hamburger, SignOut } from 'phosphor-react';
 
 import Logo from '../assets/logo.png';
 
-const SidebarCaixa: React.FC = () => {
+export default function SidebarCaixa(){
   const navigate = useNavigate();
 
   const navSections = [
@@ -93,5 +92,3 @@ const SidebarCaixa: React.FC = () => {
     </aside>
   );
 };
-
-export default SidebarCaixa;

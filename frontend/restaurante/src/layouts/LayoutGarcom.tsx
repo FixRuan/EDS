@@ -1,8 +1,7 @@
-import React from 'react';
 import SidebarGarcom from '../components/SidebarGarcom';
 import { Outlet } from 'react-router-dom';
 
-const LayoutGarcom: React.FC = () => {
+export default function LayoutGarcom(){
   return (
     <div className="flex">
       <SidebarGarcom />
@@ -12,5 +11,3 @@ const LayoutGarcom: React.FC = () => {
     </div>
   );
 };
-
-export default LayoutGarcom;

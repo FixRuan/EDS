@@ -1,8 +1,7 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
-const MainLayout: React.FC = () => {
+export default function MainLayout(){
   return (
     <div className="flex min-h-screen bg-gray-100 font-inter">
       <Sidebar />
@@ -12,5 +11,3 @@ const MainLayout: React.FC = () => {
     </div>
   );
 };
-
-export default MainLayout;

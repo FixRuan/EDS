@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import {api} from '../../services/api';
 
-const CadastrarFuncionario: React.FC = () => {
+export default function CadastrarFuncionario(){
   const [formData, setFormData] = useState({
     nome: '',
     funcao: '',
@@ -15,18 +14,18 @@ const CadastrarFuncionario: React.FC = () => {
   const [mensagem, setMensagem] = useState('');
   const [erro, setErro] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>){
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent){
     e.preventDefault();
 
     setMensagem('');
     setErro('');
 
     try {
-      const response = await api.post('/funcionarios', formData); // agora usando o cliente com token
+      await api.post('/funcionarios', formData);
       setMensagem('Funcionário cadastrado com sucesso!');
       setFormData({
         nome: '',
@@ -80,5 +79,3 @@ const CadastrarFuncionario: React.FC = () => {
     </div>
   );
 };
-
-export default CadastrarFuncionario;

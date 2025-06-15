@@ -2,7 +2,7 @@ import { FaturamentoCard } from "../components/Faturamento";
 import { ItensMaisVendidosList } from "../components/MaisVendidos";
 import { useDashboardData } from "../components/DashboardData";
 
-function Dashboard() {
+export default function Dashboard() {
   const { faturamento, itensMaisVendidos, loading, error } = useDashboardData();
 
   if (loading) return <p>Carregando dados do dashboard...</p>;
@@ -29,5 +29,3 @@ function Dashboard() {
     </div>
   );
 }
-
-export default Dashboard;
