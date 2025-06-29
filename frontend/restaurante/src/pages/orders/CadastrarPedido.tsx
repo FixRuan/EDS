@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
-import Select from "react-select";
 
 export default function CadastrarPedido() {
   const [clientes, setClientes] = useState<any[]>([]);
@@ -46,14 +45,14 @@ export default function CadastrarPedido() {
     fetchData();
   }, []);
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleInputChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
     const { name, value } = e.target;
-    setPedido((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handleSelectChange(option: any) {
-    const idClienteSelecionado = option ? Number(option.value) : null;
-    setPedido((prev) => ({ ...prev, idCliente: idClienteSelecionado }));
+    setPedido((prev) => ({
+      ...prev,
+      [name]: name === "idCliente" ? (value ? Number(value) : null) : value,
+    }));
   }
 
   function toggleProduto(idProduto: number) {
@@ -104,57 +103,6 @@ export default function CadastrarPedido() {
     }
   }
 
-  const customSelectStyles = {
-    control: (provided: any) => ({
-      ...provided,
-      backgroundColor: "#1f1f1f",
-      borderColor: "#3f3f46",
-      color: "#fff",
-      padding: "2px",
-      boxShadow: "none",
-      "&:hover": {
-        borderColor: "#facc15",
-      },
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      backgroundColor: "#1f1f1f",
-      color: "#fff",
-    }),
-    option: (provided: any, state: any) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? "#2c2c2c" : "#1f1f1f",
-      color: "#fff",
-      cursor: "pointer",
-    }),
-    singleValue: (provided: any) => ({
-      ...provided,
-      color: "#fff",
-    }),
-    input: (provided: any) => ({
-      ...provided,
-      color: "#fff",
-    }),
-    placeholder: (provided: any) => ({
-      ...provided,
-      color: "#a1a1aa",
-    }),
-    dropdownIndicator: (provided: any) => ({
-      ...provided,
-      color: "#facc15",
-    }),
-    indicatorSeparator: () => ({
-      display: "none",
-    }),
-  };
-
-  const clienteOptions = clientes.map((c) => ({
-    value: c.id, // Corrigido de idCliente para id
-    label: c.nome,
-  }));
-
-  const clienteSelecionado = clienteOptions.find((opt) => opt.value === pedido.idCliente) || null;
-
   return (
     <div className="w-full h-full bg-[#18191A]">
       <div className="p-8 max-w-3xl mx-auto text-white bg-[#18191A]">
@@ -163,14 +111,19 @@ export default function CadastrarPedido() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Cliente</label>
-            <Select
-              options={clienteOptions}
-              value={clienteSelecionado}
-              onChange={handleSelectChange}
-              placeholder="Selecione um cliente"
-              isClearable
-              styles={customSelectStyles}
-            />
+            <select
+              name="idCliente"
+              value={pedido.idCliente ?? ""}
+              onChange={handleInputChange}
+              className="mt-1 block w-full bg-[#1f1f1f] border border-gray-600 rounded p-2 text-white"
+            >
+              <option value="">Selecione um cliente</option>
+              {clientes.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nome}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -245,6 +198,7 @@ export default function CadastrarPedido() {
 
           <button
             type="submit"
+            data-cy="botao-cadastrar-pedido"
             className="mt-4 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-300 font-semibold"
           >
             Cadastrar Pedido

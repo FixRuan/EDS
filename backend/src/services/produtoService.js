@@ -13,7 +13,6 @@ export async function getProdutoById(id) {
 export async function createProduto(produto) {
   const { nome, descricao, preco, categoria, disponivel, quantidadeEstoque } = produto;
 
-  console.log({nome, descricao, preco, categoria, disponivel, quantidadeEstoque})
   const [result] = await db.query(
     'INSERT INTO Produto (nome, descricao, preco, categoria, disponivel, quantidadeEstoque) VALUES (?, ?, ?, ?, ?, ?)',
     [nome, descricao, preco, categoria, disponivel, quantidadeEstoque ?? 0]

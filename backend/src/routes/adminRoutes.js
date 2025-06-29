@@ -10,5 +10,4 @@ export default async function funcionarioRoutes(fastify, opts) {
 
   fastify.get('/dashboard/faturamento', { preHandler: apenasAdmin }, obterFaturamento);
   fastify.get('/dashboard/mais-vendidos', { preHandler: apenasAdmin }, obterMaisVendidos);
-
 }

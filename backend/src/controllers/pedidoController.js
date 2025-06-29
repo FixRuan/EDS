@@ -40,6 +40,7 @@ export async function criarPedido(req, reply) {
         return reply.code(400).send({ message: 'ID do Cliente inválido.' });
       }
     }
+
     if (idFuncionario) {
       const funcionarioExiste = await funcionarioService.getFuncionarioById(idFuncionario);
       if (!funcionarioExiste) {
@@ -81,12 +82,14 @@ export async function atualizarPedido(req, reply) {
         return reply.code(400).send({ message: 'ID do Cliente inválido.' });
       }
     }
+
     if (idFuncionario) {
       const funcionarioExiste = await funcionarioService.getFuncionarioById(idFuncionario);
       if (!funcionarioExiste) {
         return reply.code(400).send({ message: 'ID do Funcionário inválido.' });
       }
     }
+
     if (formaPagamento && !FORMA_PAGAMENTO_ENUM.includes(formaPagamento)) {
       return reply.code(400).send({ message: `Forma de pagamento inválida. Use um dos seguintes: ${FORMA_PAGAMENTO_ENUM.join(', ')}` });
     }

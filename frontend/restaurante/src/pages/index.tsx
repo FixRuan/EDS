@@ -15,6 +15,11 @@ export default function Login(){
   async function handleLogin(event: any) {
      event.preventDefault();
 
+    if (!login || !senha) {
+      alert('Preencha login e senha');
+      return;
+    }
+
      try {
         const response = await axios.post('http://localhost:3000/login', {
           login,

@@ -193,7 +193,7 @@ export default function ListarPedidos() {
         ) : (
           <div className="space-y-6">
             {pedidos.map((pedido) => (
-              <div key={pedido.idPedido} className="bg-[#242526] p-4 rounded-2xl shadow-md">
+              <div key={pedido.idPedido} data-testid="pedido-card" className="bg-[#242526] p-4 rounded-2xl shadow-md">
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold text-yellow-300">
                     Pedido #{pedido.idPedido}
@@ -223,6 +223,7 @@ export default function ListarPedidos() {
                     <label className="block">
                       Status:
                       <select
+                        name="status"
                         className="bg-[#3A3B3C] text-white px-2 py-1 rounded ml-2"
                         value={formEdicao.status}
                         onChange={(e) =>
@@ -240,6 +241,7 @@ export default function ListarPedidos() {
                     <label className="block">
                       Forma de Pagamento:
                       <select
+                        name="formaPagamento"
                         className="bg-[#3A3B3C] text-white px-2 py-1 rounded ml-2"
                         value={formEdicao.formaPagamento}
                         onChange={(e) =>

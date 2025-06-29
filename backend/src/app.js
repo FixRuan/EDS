@@ -15,12 +15,13 @@ app.register(cors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
 
-app.register(produtoRoutes, { prefix: '/produtos' });
+app.register(loginRoutes);
 app.register(funcionarioRoutes, { prefix: '/funcionarios' });
 app.register(clienteRoutes, { prefix: '/clientes' });
+app.register(produtoRoutes, { prefix: '/produtos' });
 app.register(pedidoRoutes, { prefix: '/pedidos' });
+
 app.register(pedidoProdutoRoutes, { prefix: '/pedido-produto' });
 app.register(adminRoutes, { prefix: '/admin' });
-app.register(loginRoutes);
 
 app.listen({port: process.env.PORT || 3000})

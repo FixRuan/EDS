@@ -52,9 +52,11 @@ export async function atualizarFuncionario(req, reply) {
   try {
     const { id } = req.params;
     const funcionarioExistente = await funcionarioService.getFuncionarioById(id);
+
     if (!funcionarioExistente) {
       return reply.code(404).send({ message: 'Funcionário não encontrado para atualização.' });
     }
+
     const funcionarioAtualizado = await funcionarioService.updateFuncionario(id, req.body);
     reply.send(funcionarioAtualizado);
   } catch (error) {
